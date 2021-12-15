@@ -1,5 +1,6 @@
-# Owner of this script Alphabetical Order 
+# Owners of this script in Alphabetical Order 
 # Christian Di Maio & Giacomo Nunziati
+
 import lark
 import pydot
 from Class.Loader import Loader
