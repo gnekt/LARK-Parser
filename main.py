@@ -2,17 +2,19 @@
 # Christian Di Maio & Giacomo Nunziati
 
 import lark
+from lark import Lark, Tree
 import pydot
-from Class.Loader import Loader
+from Utils.Loader import Loader
 
 if __name__ == "__main__":
-    loader : Loader = Loader("./Test/test1.json")
+    loader : Loader = Loader("./Test/test1.c")
     source : str = loader.load()
     print(">> Input string: ",source)
 
-    json_parser = lark.Lark.open("json.lark",rel_to=__file__,start="value")
-    result = json_parser.parse(source)
-    print("\n*** Parse tree ***\n",result)
-    print("\n*** Parse tree pretty print\n", result.pretty())
+    grammar_parser : Lark = lark.Lark.open("grammar.lark", start="statement")
+    result : Tree = grammar_parser.parse(source)
+    print("\t *** Parse tree pretty print\n", result.pretty())
 
-  
+    print("\t saving PDF version of tree")
+    graph = lark.tree.pydot__tree_to_graph(result, "TB")
+    graph.write_pdf("grammar.pdf")

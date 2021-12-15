@@ -1,3 +1,6 @@
+# Owners of this script in Alphabetical Order 
+# Christian Di Maio & Giacomo Nunziati
+
 import os
 
 class Loader():

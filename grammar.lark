@@ -1,0 +1,68 @@
+// Owners of this script in Alphabetical Order 
+// Christian Di Maio & Giacomo Nunziati
+
+statement: begin block_instruction end  
+
+begin : BEGIN_CYCLE OPEN_BLOCK
+
+end: CLOSE_BLOCK END_CYCLE OPEN_ROUND big_condition CLOSE_ROUND
+
+block_instruction: instruction+
+
+instruction: (assignment END_INSTRUCTION)
+
+assignment: VAR ASSIGN arithmetic_expression
+
+arithmetic_expression: arithmetic_expression MULT arithmetic_expression
+                        | arithmetic_expression DIV arithmetic_expression
+                        | arithmetic_expression PLUS arithmetic_expression
+                        | arithmetic_expression MINUS arithmetic_expression
+                        | OPEN_ROUND arithmetic_expression CLOSE_ROUND
+                        | VAR
+                        | NUMBER
+
+big_condition: single_condition
+                | (OPEN_ROUND big_condition CLOSE_ROUND logical_op )*(OPEN_ROUND big_condition CLOSE_ROUND)
+
+single_condition: VAR op NUMBER 
+                    | BOOL_TRUE
+                    | BOOL_FALSE
+                    | NUMBER_TRUE
+                    | NUMBER_FALSE
+
+op: LT | GT | LEQ | GEQ | NE | EQ 
+logical_op: LOGIC_AND | LOGIC_OR 
+
+VAR: /[a-zA-Z_]\w{0,30}/
+BEGIN_CYCLE: "do"
+END_CYCLE: "while"
+OPEN_BLOCK: "{"
+CLOSE_BLOCK: "}"
+OPEN_ROUND: "("
+CLOSE_ROUND: ")"
+END_INSTRUCTION: ";"
+ASSIGN: "="
+PLUS: "+"
+MULT: "*" 
+MINUS: "-"
+DIV: "/"
+LT:"<"
+GT:">"
+GEQ:">="
+LEQ:"<="
+EQ: "=="
+NE:"!="
+LOGIC_AND: "&&"
+LOGIC_OR: "||"
+
+true: "true" | "1"
+BOOL_TRUE: "true"
+
+// TO DO 1
+NUMBER_TRUE: /[1-9]\d*/
+BOOL_FALSE: "false"
+NUMBER_FALSE: "0"
+
+%import common.SIGNED_NUMBER -> NUMBER
+%ignore /[ \t\n\f\r]+/
+
