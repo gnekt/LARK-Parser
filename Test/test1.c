@@ -1,4 +1,3 @@
 do{
-    var=1+var;
-    var=(var+1)*-12;
-}while((var < 12) && (var > 12))
+    var=-abcd+45/10*pippo-84*var-pluto;
+}while(true)

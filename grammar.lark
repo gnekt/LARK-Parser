@@ -13,13 +13,16 @@ instruction: (assignment END_INSTRUCTION)
 
 assignment: VAR ASSIGN arithmetic_expression
 
-arithmetic_expression: arithmetic_expression MULT arithmetic_expression
-                        | arithmetic_expression DIV arithmetic_expression
-                        | arithmetic_expression PLUS arithmetic_expression
-                        | arithmetic_expression MINUS arithmetic_expression
-                        | OPEN_ROUND arithmetic_expression CLOSE_ROUND
-                        | VAR
-                        | NUMBER
+arithmetic_expression: term
+    | arithmetic_expression PLUS term
+    | arithmetic_expression MINUS term
+term: factor
+    | term MULT factor
+    | term DIV factor
+factor: NUMBER
+    | MINUS factor
+    | VAR
+    | OPEN_ROUND arithmetic_expression CLOSE_ROUND
 
 big_condition: single_condition
                 | (OPEN_ROUND big_condition CLOSE_ROUND logical_op )*(OPEN_ROUND big_condition CLOSE_ROUND)
