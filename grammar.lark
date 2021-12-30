@@ -13,12 +13,29 @@ instruction: (assignment END_INSTRUCTION)
 
 assignment: VAR ASSIGN arithmetic_expression
 
-arithmetic_expression: term
-    | arithmetic_expression PLUS term
-    | arithmetic_expression MINUS term
-term: factor
-    | term MULT factor
-    | term DIV factor
+// Priority Arithmetic Expression
+//arithmetic_expression: term
+//    | arithmetic_expression PLUS term
+//    | arithmetic_expression MINUS term
+//term: factor
+//    | term MULT factor
+//    | term DIV factor
+//factor: NUMBER
+//    | MINUS factor
+//    | VAR
+//    | OPEN_ROUND arithmetic_expression CLOSE_ROUND
+
+// Priority Arithmetic Expression, Avoiding Left Recursion
+arithmetic_expression: term arithmetic_expression_
+arithmetic_expression_: PLUS term arithmetic_expression_ 
+                        | MINUS term arithmetic_expression_ 
+                        | ""
+
+term: factor term_
+term_: MULT factor term_ 
+        | DIV factor term_ 
+        | ""
+
 factor: NUMBER
     | MINUS factor
     | VAR
