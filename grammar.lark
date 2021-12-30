@@ -27,14 +27,11 @@ assignment: VAR ASSIGN arithmetic_expression
 
 // Priority Arithmetic Expression, Avoiding Left Recursion
 arithmetic_expression: term arithmetic_expression_
-arithmetic_expression_: PLUS term arithmetic_expression_ 
-                        | MINUS term arithmetic_expression_ 
-                        | ""
+arithmetic_expression_: PLUS term arithmetic_expression_ | MINUS term arithmetic_expression | 
 
 term: factor term_
-term_: MULT factor term_ 
-        | DIV factor term_ 
-        | ""
+term_: MULT factor term_ | DIV factor term_ | 
+
 
 factor: NUMBER
     | MINUS factor
@@ -52,6 +49,7 @@ single_condition: VAR op NUMBER
 
 op: LT | GT | LEQ | GEQ | NE | EQ 
 logical_op: LOGIC_AND | LOGIC_OR 
+
 
 VAR: /[a-zA-Z_]\w{0,30}/
 BEGIN_CYCLE: "do"
@@ -74,7 +72,6 @@ EQ: "=="
 NE:"!="
 LOGIC_AND: "&&"
 LOGIC_OR: "||"
-
 true: "true" | "1"
 BOOL_TRUE: "true"
 
