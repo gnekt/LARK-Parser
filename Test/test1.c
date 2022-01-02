@@ -1,3 +1,3 @@
 do{
-    var=-abcd+45/10*pippo-84*var-pluto;
+    var=a*b*c-d*e*f+g*h*i;
 }while(true)
