@@ -5,7 +5,7 @@ statement: begin block_instruction end
 
 begin : BEGIN_CYCLE OPEN_BLOCK
 
-end: CLOSE_BLOCK END_CYCLE OPEN_ROUND big_condition CLOSE_ROUND
+end: CLOSE_BLOCK END_CYCLE OPEN_ROUND or_condition CLOSE_ROUND
 
 block_instruction: instruction+
 
@@ -13,21 +13,9 @@ instruction: (assignment END_INSTRUCTION)
 
 assignment: VAR ASSIGN arithmetic_expression
 
-// Priority Arithmetic Expression
-//arithmetic_expression: term
-//    | arithmetic_expression PLUS term
-//    | arithmetic_expression MINUS term
-//term: factor
-//    | term MULT factor
-//    | term DIV factor
-//factor: NUMBER
-//    | MINUS factor
-//    | VAR
-//    | OPEN_ROUND arithmetic_expression CLOSE_ROUND
-
 // Priority Arithmetic Expression, Avoiding Left Recursion
 arithmetic_expression: term arithmetic_expression_
-arithmetic_expression_: PLUS term arithmetic_expression_ | MINUS term arithmetic_expression_ | 
+arithmetic_expression_: PLUS term arithmetic_expression_ | MINUS term arithmetic_expression | 
 
 term: factor term_
 term_: MULT factor term_ | DIV factor term_ | 
@@ -38,17 +26,20 @@ factor: NUMBER
     | VAR
     | OPEN_ROUND arithmetic_expression CLOSE_ROUND
 
-big_condition: single_condition
-                | (OPEN_ROUND big_condition CLOSE_ROUND logical_op )*(OPEN_ROUND big_condition CLOSE_ROUND)
 
-single_condition: VAR op NUMBER 
+or_condition: or_condition LOGIC_OR and_condition | and_condition
+and_condition: and_condition LOGIC_AND condition | condition
+
+condition: VAR op NUMBER 
                     | BOOL_TRUE
                     | BOOL_FALSE
                     | NUMBER_TRUE
                     | NUMBER_FALSE
+		            | LOGIC_NOT* OPEN_ROUND or_condition CLOSE_ROUND
+                    | VAR
+
 
 op: LT | GT | LEQ | GEQ | NE | EQ 
-logical_op: LOGIC_AND | LOGIC_OR 
 
 
 VAR: /[a-zA-Z_]\w{0,30}/
@@ -72,6 +63,7 @@ EQ: "=="
 NE:"!="
 LOGIC_AND: "&&"
 LOGIC_OR: "||"
+LOGIC_NOT: "!"
 true: "true" | "1"
 BOOL_TRUE: "true"
 
